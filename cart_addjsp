@@ -1,0 +1,49 @@
+<%-- cart_add.jsp --%>
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page import="java.sql.*, javax.naming.*, javax.sql.*, java.text.*" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>カートに入れる</title>
+</head>
+<body>
+<%
+request.setCharacterEncoding("UTF-8");
+int cnt = Integer.parseInt(request.getParameter("cnt"));
+Connection db = null;
+PreparedStatement ps = null;
+
+try{
+	Context context = new InitialContext();
+	DataSource ds = (DataSource)context.lookup("java:comp/env/jdbc/abcdpool");
+	db = ds.getConnection();
+	db.setAutoCommit(false);
+	ps = db.prepareStatement("insert into cart values (?, ?);"); //isbnと個数
+
+	for(int i=1; i<=cnt; i++){
+		System.out.println(request.getParameter("check" + i));
+		if(request.getParameter("check" + i) != null){
+			System.out.println(request.getParameter("isbn" + i));
+			ps.setString(1, request.getParameter("isbn" + i));
+			ps.setInt(2, Integer.parseInt(request.getParameter("num_of_items")));
+			System.out.println(ps);
+			ps.executeUpdate();
+		}
+	}
+	db.commit();
+
+}catch(Exception e){
+	throw new ServletException(e);
+}finally{
+	try{
+		if(ps != null){ps.close();}
+		if(db != null){db.close();}
+	}catch(Exception e){}
+}
+response.sendRedirect("cart_check.jsp");
+%>
+</body>
+</html>

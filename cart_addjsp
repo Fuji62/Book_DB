@@ -21,16 +21,19 @@ try{
 	DataSource ds = (DataSource)context.lookup("java:comp/env/jdbc/abcdpool");
 	db = ds.getConnection();
 	db.setAutoCommit(false);
-	ps = db.prepareStatement("insert into cart values (?, ?);"); //isbnと個数
+	ps = db.prepareStatement("insert into cart values (?, ?)"); //isbnと個数
 
 	for(int i=1; i<=cnt; i++){
-		System.out.println(request.getParameter("check" + i));
-		if(request.getParameter("check" + i) != null){
-			System.out.println(request.getParameter("isbn" + i));
+		System.out.print("【" + i + "】");//★
+		System.out.println("isbn:"+ request.getParameter("isbn" + i));//★
+		System.out.println("num_of_items:"+ request.getParameter("num_of_items" + i));//★
+
+		if(request.getParameter("add" + i) != null){
 			ps.setString(1, request.getParameter("isbn" + i));
-			ps.setInt(2, Integer.parseInt(request.getParameter("num_of_items")));
-			System.out.println(ps);
+			ps.setInt(2, Integer.parseInt(request.getParameter("num_of_items" + i)));
+			System.out.println("query:" + ps);//★
 			ps.executeUpdate();
+			System.out.println("・カートに追加");//★
 		}
 	}
 	db.commit();

@@ -11,7 +11,12 @@
 	final String PASSWORD = "rootroot";
 	Connection con = null;
 
-	//カートテーブルを作成
+	//
+	int sessionFlg = (int)session.getAttribute("sessionFlg");
+	sessionFlg = 1;
+	session.setAttribute("sessionFlg", sessionFlg);
+
+	//カートテーブルを作成(DBにcartテーブルがあると例外になる)
 	Connection db = null;
 	PreparedStatement ps = null;
 	ResultSet rs = null;
@@ -19,7 +24,7 @@
 		Context context = new InitialContext();
 		DataSource ds = (DataSource)context.lookup("java:comp/env/jdbc/abcdpool");
 		db = ds.getConnection();
-		ps = db.prepareStatement("create table cart(isbn varchar(7), num_of_items int);");
+		ps = db.prepareStatement("create table cart(isbn varchar(17), num_of_items int);");
 		//rs = ps.executeQuery();
 		ps.executeUpdate();
 	}catch(Exception e){
@@ -55,4 +60,3 @@
 	String path = "book_search_input.jsp";
 	request.getRequestDispatcher(path).forward(request, response);
 %>
-

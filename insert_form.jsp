@@ -1,7 +1,11 @@
 <%-- insert_form.jsp --%>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" import="javax.servlet.*, java.util.*"%>
+<%
+int sessionFlg = 0;
+session.setAttribute("sessionFlg", sessionFlg);
+%>
 <!DOCTYPE html>
 <html>
 <head>
